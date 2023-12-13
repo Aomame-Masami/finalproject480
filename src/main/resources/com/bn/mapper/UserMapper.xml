@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+        <!--
+        namespace: 名称空间 = test
+        -->
+<mapper namespace="com.bn.t525_2.mapper.UserMapper">
+<select id="selectAll" resultType="com.bn.t525_2.pojo.User">
+    select * from user;
+</select>
+
+    <select id="checkUser" resultType="com.bn.t525_2.pojo.User">
+        select username from user
+        where username = #{username};
+    </select>
+
+    <select id="verifyUser" resultType="com.bn.t525_2.pojo.User">
+        select
+        *
+        from user
+<!--        where-->
+        <where>
+            <if test="username != null"> username = #{username} </if>
+            <if test="password != null"> and password = #{password} </if>
+        </where>
+<!--            username = #{username}-->
+<!--            and password = #{password};-->
+    </select>
+
+
+</mapper>

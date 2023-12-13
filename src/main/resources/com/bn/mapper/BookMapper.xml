@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+namespace: 名称空间 = test
+-->
+<mapper namespace="com.bn.t525_2.mapper.BookMapper">
+
+
+<!--    如果数据库字段名称和实体类的属性名称不一样, 则不能自动封装-->
+<!--    <sql id="book_col">-->
+<!--        book_id, isbn, book_name, price, publish_date, author, publisher-->
+<!--    </sql>-->
+
+<!--    <select id="selectAll" resultType="com.bn.t525_2.pojo.Book">-->
+<!--        select-->
+<!--        <include refid="book_col"></include>-->
+<!--        from book;-->
+<!--    </select>-->
+
+    <resultMap id="bookResultMap" type="com.bn.t525_2.pojo.Book">
+        <result column="book_name" property="bookName"/>
+    </resultMap>
+
+    <select id="selectAll" resultType="com.bn.t525_2.pojo.Book">
+        select
+        *
+        from book;
+    </select>
+    <select id="selectById" resultType="com.bn.t525_2.pojo.Book">
+        select
+        *
+        from book
+        where book_id = #{id};
+    </select>
+
+    <!--    <select id="selectAll" resultType="com.bn.t525_2.pojo.Book">-->
+<!--        select * from book;-->
+<!--    </select>-->
+</mapper>
