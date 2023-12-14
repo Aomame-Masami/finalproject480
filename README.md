@@ -12,11 +12,11 @@ Due to the nature of this project that it involves connections with databases, i
 
 ## Environment Preparation
 
-#### Clone Project 
+#### Clone Project
 
 - https://github.com/Aomame-Masami/finalproject480.git
 
-#### Extract files needed 
+#### Extract files needed
 
 - unzip bookcsv.zip into bookcsv directory.
 
@@ -28,7 +28,7 @@ Due to the nature of this project that it involves connections with databases, i
 
 - For All Systems: https://dev.mysql.com/downloads/mysql/
 
-  
+
 
 #### Redis Installation
 
@@ -45,6 +45,7 @@ Due to the nature of this project that it involves connections with databases, i
   - Locates in bookcsv directory
 
   - reference: https://www.kaggle.com/datasets/saurabhbagchi/books-dataset/
+
 - Trained vector set for similarity comparison is serialized and store in vector_column.json
 
 #### Database Config
@@ -101,19 +102,20 @@ CREATE TABLE book (
 
 This project mainly utilizes bloom filter and locality-sensitive hashing to improve database query and recommendations.
 
-- In a scenario where 10,000 clients are simultaneously shopping for books, a primary concern is efficiently determining stock availability. Continuously querying the database for each client request to check stock status can overly burden the database. To mitigate this, we've implemented a layer of Bloom filters for each request. Bloom filters, by their nature, have a zero false-negative rate. This means if the Bloom filter indicates that a book is not in the filter (returns false), we can be certain the book is either out of stock or does not exist. Only for books identified by the Bloom filter as potentially in stock do we then query the database. This approach efficiently screens out unnecessary database queries. Additionally, Bloom filters offer significantly faster query speeds (up to 1300 times faster), providing a substantial performance benefit on the service provider side. This method streamlines the process, reducing database load while maintaining accurate stock information. 
+- In a scenario where 10,000 clients are simultaneously shopping for books, a primary concern is efficiently determining stock availability. Continuously querying the database for each client request to check stock status can overly burden the database. To mitigate this, we've implemented a layer of Bloom filters for each request. Bloom filters, by their nature, have a zero false-negative rate. This means if the Bloom filter indicates that a book is not in the filter (returns false), we can be certain the book is either out of stock or does not exist. Only for books identified by the Bloom filter as potentially in stock do we then query the database. This approach efficiently screens out unnecessary database queries. Additionally, Bloom filters offer significantly faster query speeds (up to 1300 times faster), providing a substantial performance benefit on the service provider side. This method streamlines the process, reducing database load while maintaining accurate stock information.
 
 
 
-- In our system, when customers query for specific books, we aim to offer them additional recommendations. While MySQL's `LIKE` operator allows for approximate queries, it primarily matches books with similar titles. Our objective is broader: to recommend books based on a combination of factors including "Book_Title," "Book_Author," "Year_Of_Publication," and "Publisher." To achieve this, we utilize Locality-Sensitive Hashing (LSH).
+-
+In our system, when customers query for specific books, we aim to offer them additional recommendations. While MySQL's `LIKE` operator allows for approximate queries, it primarily matches books with similar titles. Our objective is broader: to recommend books based on a combination of factors including "Book_Title," "Book_Author," "Year_Of_Publication," and "Publisher." To achieve this, we utilize Locality-Sensitive Hashing (LSH).
 
-  LSH allows us to identify recommendations based on the similarities between dense vectors representing these book attributes. This method is highly efficient, enabling us to generate recommendations rapidly. The process includes obtaining the index of recommended books, retrieving the top-5 matches from the database, and then returning a `List<String> bookTitles`. The entire recommendation process is impressively swift, taking only about 0.01 seconds per query. This approach ensures that customers receive relevant, diverse, and quick book suggestions, enhancing their shopping experience.
+LSH allows us to identify recommendations based on the similarities between dense vectors representing these book attributes. This method is highly efficient, enabling us to generate recommendations rapidly. The process includes obtaining the index of recommended books, retrieving the top-5 matches from the database, and then returning a `List<String> bookTitles`. The entire recommendation process is impressively swift, taking only about 0.01 seconds per query. This approach ensures that customers receive relevant, diverse, and quick book suggestions, enhancing their shopping experience.
 
 
 
 ## Bloom Filter
 
-**The goal for the bloom filter is to return the existence of a Book in our hash set in a much faster speed than querying MySQL database.** 
+**The goal for the bloom filter is to return the existence of a Book in our hash set in a much faster speed than querying MySQL database.**
 
 #### MySQL Connection:
 
@@ -185,7 +187,7 @@ public interface BookMapper {
 
 #### BookQueryTest
 
-- `testFindBookById() ` tests the performance of MySQL query. For 1000 sample isbns, we verify that all of them are in the database, return the times it requires in total, and then calculate the average time for it. 
+- `testFindBookById() ` tests the performance of MySQL query. For 1000 sample isbns, we verify that all of them are in the database, return the times it requires in total, and then calculate the average time for it.
 
 - `public void testBloomQuery() ` test the performance of finding 1000 isbns that should exist in the database. Return the total and the average times it takes.
 - `public void testBloomQueryFp()` test the performance of finding 1000 isbns that DNE, and return the false positive rate, total time, and average time per query.
@@ -254,9 +256,9 @@ def vectorize_book(row):
 
 
 
-#### Quick Test With FASTAPI 
+#### Quick Test With FASTAPI
 
-- Before utilize the model to our application, test with python. 
+- Before utilize the model to our application, test with python.
 - Start a local server at port 8000
 
 ```
@@ -280,7 +282,7 @@ def suggest_books(book_index, top_n=5):
 
 - Test with Spring Application
 
-  The controller visits the FastAPI portal 
+  The controller visits the FastAPI portal
 
   Access from localhost:8090 will invoke a call in the spring application that send a request to FastAPI (localhost:8000).
 
@@ -368,7 +370,7 @@ Now we have managed to have a recommendation model. We just need to integrate it
       }
   ```
 
-- Return a list of book indices given a index 
+- Return a list of book indices given a index
 
   ```
       public List<Integer> compareSimilarity(int index) {
@@ -391,7 +393,7 @@ Now we have managed to have a recommendation model. We just need to integrate it
       }
   ```
 
-- Make suggestions 
+- Make suggestions
 
   ```
       public List<Book> bookSuggestion(String ISBN, int numOfBooks){
@@ -408,11 +410,11 @@ Now we have managed to have a recommendation model. We just need to integrate it
       }
   ```
 
-  
 
-#### Test 
 
-The average query time for 
+#### Test
+
+The average query time for
 
 - Comparing similarities and return book indexes
 - Look up for the books
